@@ -1,0 +1,20 @@
+Number of 1 Bits##Easy##Bit Manipulation##number-of-1-bits
+Hamming Distance##Easy##Bit Manipulation##hamming-distance
+Single Number##Easy##Bit Manipulation##single-number
+Missing Number##Easy##Bit Manipulation##missing-number
+Counting Bits##Easy##Bit Manipulation##counting-bits
+Reverse Bits##Easy##Bit Manipulation##reverse-bits
+Power of Two##Easy##Bit Manipulation##power-of-two
+Number Complement##Easy##Bit Manipulation##number-complement
+Binary Number with Alternating Bits##Easy##Bit Manipulation##binary-number-with-alternating-bits
+Convert a Number to Hexadecimal##Easy##Bit Manipulation##convert-a-number-to-hexadecimal
+XOR Operation in an Array##Easy##Bit Manipulation##xor-operation-in-an-array
+Decode XORed Array##Easy##Bit Manipulation##decode-xored-array
+Sum of Two Integers##Medium##Bit Manipulation##sum-of-two-integers
+Single Number II##Medium##Bit Manipulation##single-number-ii
+Single Number III##Medium##Bit Manipulation##single-number-iii
+Bitwise AND of Numbers Range##Medium##Bit Manipulation##bitwise-and-of-numbers-range
+Maximum Product of Word Lengths##Medium##Bit Manipulation##maximum-product-of-word-lengths
+Total Hamming Distance##Medium##Bit Manipulation##total-hamming-distance
+Minimum Flips to Make a OR b Equal to c##Medium##Bit Manipulation##minimum-flips-to-make-a-or-b-equal-to-c
+Maximum XOR of Two Numbers in an Array##Hard##Bit Manipulation##maximum-xor-of-two-numbers-in-an-array

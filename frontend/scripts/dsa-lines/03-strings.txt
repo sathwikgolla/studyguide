@@ -1,0 +1,30 @@
+Reverse String##Easy##Strings##reverse-string
+Reverse Vowels of a String##Easy##Strings##reverse-vowels-of-a-string
+First Unique Character in a String##Easy##Strings##first-unique-character-in-a-string
+Ransom Note##Easy##Strings##ransom-note
+Find the Index of the First Occurrence in a String##Easy##Strings##find-the-index-of-the-first-occurrence-in-a-string
+Excel Sheet Column Title##Easy##Strings##excel-sheet-column-title
+Is Subsequence##Easy##Strings##is-subsequence
+Detect Capital##Easy##Strings##detect-capital
+Reverse Words in a String III##Easy##Strings##reverse-words-in-a-string-iii
+To Lower Case##Easy##Strings##to-lower-case
+Longest Common Prefix##Easy##Strings##longest-common-prefix
+Roman to Integer##Easy##Strings##roman-to-integer
+Integer to Roman##Medium##Strings##integer-to-roman
+Longest Palindrome##Easy##Strings##longest-palindrome
+Multiply Strings##Medium##Strings##multiply-strings
+Reverse Words in a String##Medium##Strings##reverse-words-in-a-string
+Zigzag Conversion##Medium##Strings##zigzag-conversion
+String to Integer (atoi)##Medium##Strings##string-to-integer-atoi
+Longest Substring Without Repeating Characters##Medium##Strings##longest-substring-without-repeating-characters
+Longest Palindromic Substring##Medium##Strings##longest-palindromic-substring
+Group Anagrams##Medium##Strings##group-anagrams
+Encode and Decode Strings##Medium##Strings##encode-and-decode-strings
+Simplify Path##Medium##Strings##simplify-path
+Basic Calculator II##Medium##Strings##basic-calculator-ii
+Reorder Data in Log Files##Medium##Strings##reorder-data-in-log-files
+Partition Labels##Medium##Strings##partition-labels
+Minimum Window Substring##Hard##Strings##minimum-window-substring
+Regular Expression Matching##Hard##Strings##regular-expression-matching
+Wildcard Matching##Hard##Strings##wildcard-matching
+Distinct Subsequences##Hard##Strings##distinct-subsequences

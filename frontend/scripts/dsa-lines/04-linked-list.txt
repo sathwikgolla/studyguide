@@ -1,0 +1,50 @@
+Reverse Linked List##Easy##Linked List##reverse-linked-list
+Merge Two Sorted Lists##Easy##Linked List##merge-two-sorted-lists
+Linked List Cycle##Easy##Linked List##linked-list-cycle
+Middle of the Linked List##Easy##Linked List##middle-of-the-linked-list
+Intersection of Two Linked Lists##Easy##Linked List##intersection-of-two-linked-lists
+Palindrome Linked List##Easy##Linked List##palindrome-linked-list
+Remove Linked List Elements##Easy##Linked List##remove-linked-list-elements
+Remove Duplicates from Sorted List##Easy##Linked List##remove-duplicates-from-sorted-list
+Convert Binary Number in a Linked List to Integer##Easy##Linked List##convert-binary-number-in-a-linked-list-to-integer
+Delete Node in a Linked List##Medium##Linked List##delete-node-in-a-linked-list
+Reverse Linked List II##Medium##Linked List##reverse-linked-list-ii
+Add Two Numbers##Medium##Linked List##add-two-numbers
+Add Two Numbers II##Medium##Linked List##add-two-numbers-ii
+Odd Even Linked List##Medium##Linked List##odd-even-linked-list
+Remove Nth Node From End of List##Medium##Linked List##remove-nth-node-from-end-of-list
+Swap Nodes in Pairs##Medium##Linked List##swap-nodes-in-pairs
+Rotate List##Medium##Linked List##rotate-list
+Partition List##Medium##Linked List##partition-list
+Copy List with Random Pointer##Medium##Linked List##copy-list-with-random-pointer
+Linked List Cycle II##Medium##Linked List##linked-list-cycle-ii
+Sort List##Medium##Linked List##sort-list
+Insertion Sort List##Medium##Linked List##insertion-sort-list
+Reorder List##Medium##Linked List##reorder-list
+Flatten a Multilevel Doubly Linked List##Medium##Linked List##flatten-a-multilevel-doubly-linked-list
+Merge In Between Linked Lists##Medium##Linked List##merge-in-between-linked-lists
+Remove Duplicates from Sorted List II##Medium##Linked List##remove-duplicates-from-sorted-list-ii
+Split Linked List in Parts##Medium##Linked List##split-linked-list-in-parts
+Next Greater Node In Linked List##Medium##Linked List##next-greater-node-in-linked-list
+Double a Number Represented as a Linked List##Medium##Linked List##double-a-number-represented-as-a-linked-list
+Merge Nodes in Between Zeros##Medium##Linked List##merge-nodes-in-between-zeros
+Swapping Nodes in a Linked List##Medium##Linked List##swapping-nodes-in-a-linked-list
+Remove Zero Sum Consecutive Nodes from Linked List##Medium##Linked List##remove-zero-sum-consecutive-nodes-from-linked-list
+Linked List Components##Medium##Linked List##linked-list-components
+Delete the Middle Node of a Linked List##Medium##Linked List##delete-the-middle-node-of-a-linked-list
+Insert Greatest Common Divisors in Linked List##Medium##Linked List##insert-greatest-common-divisors-in-linked-list
+Sort Linked List Already Sorted Using Absolute Values##Medium##Linked List##sort-linked-list-already-sorted-using-absolute-values
+Design Linked List##Medium##Linked List##design-linked-list
+Insert Into a Sorted Circular Linked List##Medium##Linked List##insert-into-a-sorted-circular-linked-list
+Design Browser History##Medium##Linked List##design-browser-history
+Merge k Sorted Lists##Hard##Linked List##merge-k-sorted-lists
+Reverse Nodes in k-Group##Hard##Linked List##reverse-nodes-in-k-group
+LRU Cache##Medium##Linked List##lru-cache
+LFU Cache##Hard##Linked List##lfu-cache
+All O`One Data Structure##Hard##Linked List##all-oone-data-structure
+Reverse Nodes in Even Length Groups##Medium##Linked List##reverse-nodes-in-even-length-groups
+Design Front Middle Back Queue##Medium##Linked List##design-front-middle-back-queue
+Detect Loop in linked list##Medium##Linked List##https://practice.geeksforgeeks.org/problems/detect-loop-in-linked-list/1
+Find length of Loop##Medium##Linked List##https://practice.geeksforgeeks.org/problems/find-length-of-loop/1
+Remove loop in Linked List##Medium##Linked List##https://practice.geeksforgeeks.org/problems/remove-loop-in-linked-list/1
+Add 1 to a number represented by linked list##Medium##Linked List##https://practice.geeksforgeeks.org/problems/add-1-to-a-number-represented-as-linked-list/1

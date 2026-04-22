@@ -1,0 +1,30 @@
+Binary Search##Easy##Binary Search##binary-search
+Search Insert Position##Easy##Binary Search##search-insert-position
+First Bad Version##Easy##Binary Search##first-bad-version
+Sqrt(x)##Easy##Binary Search##sqrtx
+Valid Perfect Square##Easy##Binary Search##valid-perfect-square
+Guess Number Higher or Lower##Easy##Binary Search##guess-number-higher-or-lower
+Arranging Coins##Easy##Binary Search##arranging-coins
+Find Smallest Letter Greater Than Target##Easy##Binary Search##find-smallest-letter-greater-than-target
+Count Negative Numbers in a Sorted Matrix##Easy##Binary Search##count-negative-numbers-in-a-sorted-matrix
+Kth Missing Positive Number##Easy##Binary Search##kth-missing-positive-number
+Search a 2D Matrix##Medium##Binary Search##search-a-2d-matrix
+Search a 2D Matrix II##Medium##Binary Search##search-a-2d-matrix-ii
+Find First and Last Position of Element in Sorted Array##Medium##Binary Search##find-first-and-last-position-of-element-in-sorted-array
+Search in Rotated Sorted Array##Medium##Binary Search##search-in-rotated-sorted-array
+Search in Rotated Sorted Array II##Medium##Binary Search##search-in-rotated-sorted-array-ii
+Find Minimum in Rotated Sorted Array##Medium##Binary Search##find-minimum-in-rotated-sorted-array
+Find Minimum in Rotated Sorted Array II##Hard##Binary Search##find-minimum-in-rotated-sorted-array-ii
+Find Peak Element##Medium##Binary Search##find-peak-element
+Peak Index in a Mountain Array##Medium##Binary Search##peak-index-in-a-mountain-array
+Single Element in a Sorted Array##Medium##Binary Search##single-element-in-a-sorted-array
+Capacity To Ship Packages Within D Days##Medium##Binary Search##capacity-to-ship-packages-within-d-days
+Koko Eating Bananas##Medium##Binary Search##koko-eating-bananas
+Magnetic Force Between Two Balls##Medium##Binary Search##magnetic-force-between-two-balls
+Successful Pairs of Spells and Potions##Medium##Binary Search##successful-pairs-of-spells-and-potions
+Time Based Key-Value Store##Medium##Binary Search##time-based-key-value-store
+Minimum Speed to Arrive on Time##Medium##Binary Search##minimum-speed-to-arrive-on-time
+Maximum Candies Allocated to K Children##Medium##Binary Search##maximum-candies-allocated-to-k-children
+Median of Two Sorted Arrays##Hard##Binary Search##median-of-two-sorted-arrays
+Split Array Largest Sum##Hard##Binary Search##split-array-largest-sum
+Minimize Max Distance to Gas Station##Hard##Binary Search##minimize-max-distance-to-gas-station

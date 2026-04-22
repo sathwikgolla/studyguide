@@ -1,0 +1,20 @@
+Valid Parentheses##Easy##Stacks & Queues##valid-parentheses
+Min Stack##Medium##Stacks & Queues##min-stack
+Implement Stack using Queues##Easy##Stacks & Queues##implement-stack-using-queues
+Implement Queue using Stacks##Easy##Stacks & Queues##implement-queue-using-stacks
+Design Circular Queue##Medium##Stacks & Queues##design-circular-queue
+Design Circular Deque##Medium##Stacks & Queues##design-circular-deque
+Number of Recent Calls##Easy##Stacks & Queues##number-of-recent-calls
+Moving Average from Data Stream##Easy##Stacks & Queues##moving-average-from-data-stream
+Design Hit Counter##Medium##Stacks & Queues##design-hit-counter
+Online Stock Span##Medium##Stacks & Queues##online-stock-span
+Daily Temperatures##Medium##Stacks & Queues##daily-temperatures
+Next Greater Element I##Easy##Stacks & Queues##next-greater-element-i
+Next Greater Element II##Medium##Stacks & Queues##next-greater-element-ii
+Asteroid Collision##Medium##Stacks & Queues##asteroid-collision
+Decode String##Medium##Stacks & Queues##decode-string
+Remove K Digits##Medium##Stacks & Queues##remove-k-digits
+Basic Calculator II##Medium##Stacks & Queues##basic-calculator-ii
+Evaluate Reverse Polish Notation##Medium##Stacks & Queues##evaluate-reverse-polish-notation
+Exclusive Time of Functions##Medium##Stacks & Queues##exclusive-time-of-functions
+Largest Rectangle in Histogram##Hard##Stacks & Queues##largest-rectangle-in-histogram

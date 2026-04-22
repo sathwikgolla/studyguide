@@ -1,0 +1,30 @@
+Contains Duplicate##Easy##Arrays##contains-duplicate
+Remove Duplicates from Sorted Array##Easy##Arrays##remove-duplicates-from-sorted-array
+Plus One##Easy##Arrays##plus-one
+Move Zeroes##Easy##Arrays##move-zeroes
+Single Number##Easy##Arrays##single-number
+Majority Element##Easy##Arrays##majority-element
+Missing Number##Easy##Arrays##missing-number
+Find All Numbers Disappeared in an Array##Easy##Arrays##find-all-numbers-disappeared-in-an-array
+Max Consecutive Ones##Easy##Arrays##max-consecutive-ones
+Squares of a Sorted Array##Easy##Arrays##squares-of-a-sorted-array
+Rotate Array##Medium##Arrays##rotate-array
+3Sum##Medium##Arrays##3sum
+Container With Most Water##Medium##Arrays##container-with-most-water
+Next Permutation##Medium##Arrays##next-permutation
+Jump Game##Medium##Arrays##jump-game
+Jump Game II##Medium##Arrays##jump-game-ii
+Spiral Matrix##Medium##Arrays##spiral-matrix
+Set Matrix Zeroes##Medium##Arrays##set-matrix-zeroes
+Subarray Sum Equals K##Medium##Arrays##subarray-sum-equals-k
+Merge Intervals##Medium##Arrays##merge-intervals
+Insert Interval##Medium##Arrays##insert-interval
+Sort Colors##Medium##Arrays##sort-colors
+Product of Array Except Self##Medium##Arrays##product-of-array-except-self
+Find Peak Element##Medium##Arrays##find-peak-element
+Increasing Triplet Subsequence##Medium##Arrays##increasing-triplet-subsequence
+First Missing Positive##Hard##Arrays##first-missing-positive
+Candy##Hard##Arrays##candy
+Trapping Rain Water##Hard##Arrays##trapping-rain-water
+Largest Rectangle in Histogram##Hard##Arrays##largest-rectangle-in-histogram
+Sliding Window Maximum##Hard##Arrays##sliding-window-maximum

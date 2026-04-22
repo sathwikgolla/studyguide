@@ -1,0 +1,30 @@
+Maximum Depth of Binary Tree##Easy##Trees##maximum-depth-of-binary-tree
+Same Tree##Easy##Trees##same-tree
+Invert Binary Tree##Easy##Trees##invert-binary-tree
+Symmetric Tree##Easy##Trees##symmetric-tree
+Path Sum##Easy##Trees##path-sum
+Diameter of Binary Tree##Easy##Trees##diameter-of-binary-tree
+Balanced Binary Tree##Easy##Trees##balanced-binary-tree
+Merge Two Binary Trees##Easy##Trees##merge-two-binary-trees
+Binary Tree Inorder Traversal##Easy##Trees##binary-tree-inorder-traversal
+Binary Tree Preorder Traversal##Easy##Trees##binary-tree-preorder-traversal
+Binary Tree Postorder Traversal##Easy##Trees##binary-tree-postorder-traversal
+Lowest Common Ancestor of a Binary Search Tree##Easy##Trees##lowest-common-ancestor-of-a-binary-search-tree
+Convert Sorted Array to Binary Search Tree##Easy##Trees##convert-sorted-array-to-binary-search-tree
+Binary Tree Level Order Traversal##Medium##Trees##binary-tree-level-order-traversal
+Binary Tree Zigzag Level Order Traversal##Medium##Trees##binary-tree-zigzag-level-order-traversal
+Lowest Common Ancestor of a Binary Tree##Medium##Trees##lowest-common-ancestor-of-a-binary-tree
+Validate Binary Search Tree##Medium##Trees##validate-binary-search-tree
+Kth Smallest Element in a BST##Medium##Trees##kth-smallest-element-in-a-bst
+Unique Binary Search Trees##Medium##Trees##unique-binary-search-trees
+Unique Binary Search Trees II##Medium##Trees##unique-binary-search-trees-ii
+Construct Binary Tree from Preorder and Inorder Traversal##Medium##Trees##construct-binary-tree-from-preorder-and-inorder-traversal
+Construct Binary Tree from Inorder and Postorder Traversal##Medium##Trees##construct-binary-tree-from-inorder-and-postorder-traversal
+Flatten Binary Tree to Linked List##Medium##Trees##flatten-binary-tree-to-linked-list
+Populating Next Right Pointers in Each Node##Medium##Trees##populating-next-right-pointers-in-each-node
+Populating Next Right Pointers in Each Node II##Medium##Trees##populating-next-right-pointers-in-each-node-ii
+Sum Root to Leaf Numbers##Medium##Trees##sum-root-to-leaf-numbers
+Binary Tree Right Side View##Medium##Trees##binary-tree-right-side-view
+Count Complete Tree Nodes##Medium##Trees##count-complete-tree-nodes
+Binary Tree Maximum Path Sum##Hard##Trees##binary-tree-maximum-path-sum
+Serialize and Deserialize Binary Tree##Hard##Trees##serialize-and-deserialize-binary-tree

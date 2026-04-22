@@ -1,0 +1,30 @@
+Number of Islands##Medium##Graphs##number-of-islands
+Clone Graph##Medium##Graphs##clone-graph
+Course Schedule##Medium##Graphs##course-schedule
+Course Schedule II##Medium##Graphs##course-schedule-ii
+Pacific Atlantic Water Flow##Medium##Graphs##pacific-atlantic-water-flow
+Rotting Oranges##Medium##Graphs##rotting-oranges
+Keys and Rooms##Medium##Graphs##keys-and-rooms
+Redundant Connection##Medium##Graphs##redundant-connection
+Evaluate Division##Medium##Graphs##evaluate-division
+Cheapest Flights Within K Stops##Medium##Graphs##cheapest-flights-within-k-stops
+Network Delay Time##Medium##Graphs##network-delay-time
+Reconstruct Itinerary##Hard##Graphs##reconstruct-itinerary
+Is Graph Bipartite?##Medium##Graphs##is-graph-bipartite
+All Paths From Source to Target##Medium##Graphs##all-paths-from-source-to-target
+Find Eventual Safe States##Medium##Graphs##find-eventual-safe-states
+Course Schedule IV##Medium##Graphs##course-schedule-iv
+Minimum Height Trees##Medium##Graphs##minimum-height-trees
+Number of Provinces##Medium##Graphs##number-of-provinces
+Find if Path Exists in Graph##Easy##Graphs##find-if-path-exists-in-graph
+Path With Minimum Effort##Medium##Graphs##path-with-minimum-effort
+Swim in Rising Water##Hard##Graphs##swim-in-rising-water
+Critical Connections in a Network##Hard##Graphs##critical-connections-in-a-network
+Accounts Merge##Medium##Graphs##accounts-merge
+Satisfiability of Equality Equations##Medium##Graphs##satisfiability-of-equality-equations
+Smallest String With Swaps##Medium##Graphs##smallest-string-with-swaps
+Nearest Exit from Entrance in Maze##Medium##Graphs##nearest-exit-from-entrance-in-maze
+Shortest Path with Alternating Colors##Medium##Graphs##shortest-path-with-alternating-colors
+Shortest Path Visiting All Nodes##Hard##Graphs##shortest-path-visiting-all-nodes
+Word Ladder##Hard##Graphs##word-ladder
+Regions Cut By Slashes##Medium##Graphs##regions-cut-by-slashes
