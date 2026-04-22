@@ -1,4 +1,19 @@
-import { Code2, Cpu, Database, Layers, Network } from 'lucide-react'
+import {
+  Blocks,
+  Brain,
+  Code2,
+  Cpu,
+  Database,
+  FlaskConical,
+  Handshake,
+  Layers,
+  Network,
+  Rocket,
+  Smartphone,
+  Stars,
+  Workflow,
+  Wrench,
+} from 'lucide-react'
 
 export const dashboardNav = [
   { id: 'dsa', label: 'DSA', path: '/dsa', icon: Code2 },
@@ -10,5 +25,66 @@ export const dashboardNav = [
     label: 'Full Stack Development',
     path: '/full-stack',
     icon: Layers,
+  },
+  { id: 'aptitude', label: 'Aptitude', path: '/aptitude', icon: Brain },
+  {
+    id: 'logical-reasoning',
+    label: 'Logical Reasoning',
+    path: '/logical-reasoning',
+    icon: Workflow,
+  },
+  {
+    id: 'system-design',
+    label: 'System Design',
+    path: '/system-design',
+    icon: Blocks,
+  },
+  {
+    id: 'devops-cloud',
+    label: 'DevOps / Cloud',
+    path: '/devops-cloud',
+    icon: Rocket,
+  },
+  {
+    id: 'hr-behavioral',
+    label: 'HR / Behavioral Interview',
+    path: '/hr-behavioral',
+    icon: Handshake,
+  },
+  {
+    id: 'testing-qa',
+    label: 'Testing / QA',
+    path: '/testing-qa',
+    icon: FlaskConical,
+  },
+  {
+    id: 'design-patterns',
+    label: 'Design Patterns',
+    path: '/design-patterns',
+    icon: Wrench,
+  },
+  {
+    id: 'mobile-development',
+    label: 'Mobile Development',
+    path: '/mobile-development',
+    icon: Smartphone,
+  },
+  {
+    id: 'web3-blockchain',
+    label: 'Web3 / Blockchain',
+    path: '/web3-blockchain',
+    icon: Layers,
+  },
+  {
+    id: 'core-cs-fundamentals',
+    label: 'Core CS Fundamentals',
+    path: '/core-cs-fundamentals',
+    icon: Cpu,
+  },
+  {
+    id: 'smart-features',
+    label: 'Smart Features',
+    path: '/smart-features',
+    icon: Stars,
   },
 ]

@@ -5,7 +5,7 @@ import { getInterviewTopic } from '../data/interviewTopics'
 import { normalizeModuleItems } from '../lib/moduleItems'
 
 export default function InterviewTopicPage({ topicId }) {
-  const { map, toggleDone, saveQuestionNotes } = useProgress()
+  const { map, toggleDone, saveQuestionNotes, saveQuestionFlags, toggleFavorite } = useProgress()
   const topic = getInterviewTopic(topicId)
   const categories = topic?.categories ?? []
   const rows = useMemo(
@@ -32,6 +32,8 @@ export default function InterviewTopicPage({ topicId }) {
       map={map}
       toggleDone={toggleDone}
       saveQuestionNotes={saveQuestionNotes}
+      saveQuestionFlags={saveQuestionFlags}
+      toggleFavorite={toggleFavorite}
     />
   )
 }

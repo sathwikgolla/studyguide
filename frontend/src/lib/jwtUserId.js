@@ -6,7 +6,9 @@ export function getUserIdFromToken(token) {
     if (parts.length < 2) return null
     const json = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'))
     const payload = JSON.parse(json)
-    return typeof payload.userId === 'string' ? payload.userId : null
+    if (typeof payload.userId === 'string') return payload.userId
+    if (typeof payload.sub === 'string') return payload.sub
+    return null
   } catch {
     return null
   }

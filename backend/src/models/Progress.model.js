@@ -41,6 +41,70 @@ const progressSchema = new mongoose.Schema(
       default: "",
       maxlength: 50000,
     },
+    revisit: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    important: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    confusing: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    favorite: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    lastActivityAt: {
+      type: Date,
+      default: Date.now,
+      index: true,
+    },
+    attempts: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    incorrectCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    successRate: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 1,
+    },
+    lastAttempted: {
+      type: Date,
+      default: null,
+      index: true,
+    },
+    nextRevisionDate: {
+      type: Date,
+      default: null,
+      index: true,
+    },
+    avgTimeSeconds: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    companyTags: {
+      type: [String],
+      default: [],
+    },
+    conceptTags: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true }
 );

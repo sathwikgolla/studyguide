@@ -1,4 +1,19 @@
-import { cnTopics, dbmsTopics, dsaTopics, osTopics } from '../data/moduleTopics'
+import {
+  aptitudeTopics,
+  cnTopics,
+  coreCsTopics,
+  dbmsTopics,
+  devopsTopics,
+  dsaTopics,
+  hrTopics,
+  logicalTopics,
+  mobileTopics,
+  osTopics,
+  patternsTopics,
+  systemDesignTopics,
+  testingTopics,
+  web3Topics,
+} from '../data/moduleTopics'
 
 const topicKeywords = {
   dsa: {
@@ -32,7 +47,18 @@ export function topicsForModule(moduleId) {
   if (moduleId === 'dsa') return dsaTopics
   if (moduleId === 'os') return osTopics
   if (moduleId === 'cn') return cnTopics
-  return dbmsTopics
+  if (moduleId === 'dbms') return dbmsTopics
+  if (moduleId === 'aptitude') return aptitudeTopics
+  if (moduleId === 'logical-reasoning') return logicalTopics
+  if (moduleId === 'system-design') return systemDesignTopics
+  if (moduleId === 'devops-cloud') return devopsTopics
+  if (moduleId === 'hr-behavioral') return hrTopics
+  if (moduleId === 'testing-qa') return testingTopics
+  if (moduleId === 'design-patterns') return patternsTopics
+  if (moduleId === 'mobile-development') return mobileTopics
+  if (moduleId === 'web3-blockchain') return web3Topics
+  if (moduleId === 'core-cs-fundamentals') return coreCsTopics
+  return []
 }
 
 export function normalizeModuleItems(moduleId, rows) {
@@ -52,9 +78,26 @@ export function normalizeModuleItems(moduleId, rows) {
       description: `${q.topic || topic} practice item`,
       link: q.link,
       resourceType: 'question',
+      company: inferCompany(moduleId, topic, difficulty),
+      concepts: inferConcepts(topic),
       order: index + 1,
     }
   })
+}
+
+function inferCompany(moduleId, topic, difficulty) {
+  if (moduleId === 'dsa' && ['Dynamic Programming', 'Graphs'].includes(topic)) return 'Google'
+  if (moduleId === 'system-design') return 'Amazon'
+  if (difficulty === 'Hard') return 'Microsoft'
+  return 'General'
+}
+
+function inferConcepts(topic) {
+  const t = String(topic || '')
+  if (t.includes('Search')) return ['Binary Search', 'Sorting']
+  if (t.includes('Graph')) return ['DFS', 'BFS']
+  if (t.includes('Database')) return ['Schema Design', 'Indexing']
+  return [t]
 }
 
 function pickTopic(topics, keywords, source) {

@@ -6,7 +6,7 @@ import { useCountUp } from '../../../hooks/useCountUp'
 
 const MotionLink = motion(Link)
 
-export default function OverviewHeroCard({ summary }) {
+export default function OverviewHeroCard({ summary, continuePath = '/dsa', continueLabel = 'Continue DSA' }) {
   const completedCount = useCountUp(summary.totalCompleted, 760)
   const totalCount = useCountUp(summary.totalQuestions, 860)
   const pctCount = useCountUp(summary.totalPct, 760)
@@ -37,12 +37,12 @@ export default function OverviewHeroCard({ summary }) {
         </div>
 
         <MotionLink
-          to="/dsa"
+          to={continuePath}
           whileHover={{ y: -3, scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="group inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-300/35 bg-gradient-to-r from-indigo-500 to-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(99,102,241,0.4)]"
         >
-          Continue DSA
+          {continueLabel}
           <motion.span className="inline-flex" whileHover={{ x: 3 }}>
             <ArrowUpRight className="size-4" aria-hidden />
           </motion.span>

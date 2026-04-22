@@ -6,6 +6,20 @@ import { loadProgress, saveProgress } from '../lib/dsaProgress'
 import { dsaSheets } from '../data/dsa'
 import { getInterviewTopic, interviewTopicIds } from '../data/interviewTopics'
 import { fullStackSections } from '../data/fullstackRoadmap'
+import { buildAdditionalModuleItems } from '../data/additionalModules'
+
+const extraModuleIds = [
+  'aptitude',
+  'logical-reasoning',
+  'system-design',
+  'devops-cloud',
+  'hr-behavioral',
+  'testing-qa',
+  'design-patterns',
+  'mobile-development',
+  'web3-blockchain',
+  'core-cs-fundamentals',
+]
 
 const ProgressContext = createContext(null)
 
@@ -58,6 +72,21 @@ function buildCatalog() {
         questions.push(meta)
         byQuestionId[item.id] = meta
       }
+    }
+  }
+
+  for (const moduleId of extraModuleIds) {
+    const moduleItems = buildAdditionalModuleItems(moduleId)
+    for (const item of moduleItems) {
+      const meta = {
+        questionId: item.id,
+        categoryId: moduleId,
+        categoryLabel: item.category,
+        sheetId: `${moduleId}-${item.topic}`.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        sheetLabel: `${item.category} - ${item.topic}`,
+      }
+      questions.push(meta)
+      byQuestionId[item.id] = meta
     }
   }
 
@@ -147,6 +176,10 @@ export function ProgressProvider({ children }) {
             next[row.questionId] = {
               completed: Boolean(row.completed),
               notes: row.notes ?? '',
+              revisit: Boolean(row.revisit),
+              important: Boolean(row.important),
+              confusing: Boolean(row.confusing),
+              favorite: Boolean(row.favorite),
             }
           }
           if (!cancelled) {
@@ -183,6 +216,13 @@ export function ProgressProvider({ children }) {
     for (const section of fullStackSections) {
       for (const group of section.topicGroups ?? []) {
         loadKey(`fullstack-${section.id}-${group.id}`)
+      }
+    }
+    for (const moduleId of extraModuleIds) {
+      const moduleItems = buildAdditionalModuleItems(moduleId)
+      for (const item of moduleItems) {
+        loadKey(`${moduleId}-${item.topic}`.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
+        loadKey(`${moduleId}-${item.topic}-${item.difficulty}`.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
       }
     }
 
@@ -269,6 +309,77 @@ export function ProgressProvider({ children }) {
     [map, useRemote, token]
   )
 
+  /** Update flags/tags for a single question. */
+  const saveQuestionFlags = useCallback(
+    (progressKey, link, flags) => {
+      const current = map[link] ?? {}
+      const entry = {
+        completed: Boolean(current.completed),
+        notes: current.notes ?? '',
+        revisit: typeof flags.revisit === 'boolean' ? flags.revisit : Boolean(current.revisit),
+        important: typeof flags.important === 'boolean' ? flags.important : Boolean(current.important),
+        confusing: typeof flags.confusing === 'boolean' ? flags.confusing : Boolean(current.confusing),
+        favorite: typeof flags.favorite === 'boolean' ? flags.favorite : Boolean(current.favorite),
+      }
+      const meta = catalog.byQuestionId[link]
+      setMap((prev) => ({ ...prev, [link]: entry }))
+      if (useRemote) {
+        postJson(
+          '/api/progress',
+          {
+            questionId: link,
+            completed: Boolean(current.completed),
+            notes: current.notes ?? '',
+            revisit: entry.revisit,
+            important: entry.important,
+            confusing: entry.confusing,
+            favorite: entry.favorite,
+            categoryId: meta?.categoryId,
+            sheetId: meta?.sheetId ?? progressKey,
+          },
+          { token }
+        ).catch(() => {})
+      }
+    },
+    [map, token, useRemote]
+  )
+
+  const toggleFavorite = useCallback(
+    async (progressKey, link) => {
+      const current = map[link] ?? {}
+      const nextFavorite = !Boolean(current.favorite)
+      const meta = catalog.byQuestionId[link]
+      setMap((prev) => ({ ...prev, [link]: { ...current, favorite: nextFavorite } }))
+      if (useRemote) {
+        try {
+          await postJson(
+            '/api/favorites/toggle',
+            {
+              questionId: link,
+              categoryId: meta?.categoryId,
+              sheetId: meta?.sheetId ?? progressKey,
+            },
+            { token }
+          )
+        } catch {
+          postJson(
+            '/api/progress/favorites/toggle',
+            {
+              questionId: link,
+              categoryId: meta?.categoryId,
+              sheetId: meta?.sheetId ?? progressKey,
+            },
+            { token }
+          ).catch(() => {
+            setMap((prev) => ({ ...prev, [link]: { ...current, favorite: Boolean(current.favorite) } }))
+          })
+        }
+      }
+      return nextFavorite
+    },
+    [map, token, useRemote]
+  )
+
   const summary = useMemo(() => buildSummary(map), [map])
 
   const getQuestionMeta = useCallback((questionId) => catalog.byQuestionId[questionId] ?? null, [])
@@ -282,9 +393,11 @@ export function ProgressProvider({ children }) {
       progressSummary: summary,
       toggleDone,
       saveQuestionNotes,
+      saveQuestionFlags,
+      toggleFavorite,
       getQuestionMeta,
     }),
-    [map, hydrated, summary, toggleDone, saveQuestionNotes, getQuestionMeta]
+    [map, hydrated, summary, toggleDone, saveQuestionNotes, saveQuestionFlags, toggleFavorite, getQuestionMeta]
   )
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>

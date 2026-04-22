@@ -1,23 +1,15 @@
 import { useMemo } from 'react'
-import ModuleLearningPage from '../components/modules/ModuleLearningPage'
 import { useProgress } from '../context/ProgressContext'
-import { dsaSheets } from '../data/dsa'
-import { normalizeModuleItems } from '../lib/moduleItems'
+import ModuleLearningPage from '../components/modules/ModuleLearningPage'
+import { buildAdditionalModuleItems } from '../data/additionalModules'
 
-export default function DsaTopicPage() {
+export default function AdditionalModulePage({ moduleId }) {
   const { map, toggleDone, saveQuestionNotes, saveQuestionFlags, toggleFavorite } = useProgress()
-  const items = useMemo(
-    () =>
-      normalizeModuleItems(
-        'dsa',
-        dsaSheets.flatMap((sheet) => sheet.questions ?? [])
-      ),
-    []
-  )
+  const items = useMemo(() => buildAdditionalModuleItems(moduleId), [moduleId])
 
   return (
     <ModuleLearningPage
-      moduleId="dsa"
+      moduleId={moduleId}
       items={items}
       map={map}
       toggleDone={toggleDone}

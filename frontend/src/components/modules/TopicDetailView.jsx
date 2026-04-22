@@ -11,6 +11,8 @@ export default function TopicDetailView({
   map,
   onToggle,
   onNotes,
+  onFavorite,
+  onTag,
   variant,
 }) {
   const [open, setOpen] = useState(() => new Set(DIFFS))
@@ -49,9 +51,15 @@ export default function TopicDetailView({
                   item={item}
                   done={Boolean(map[item.id]?.completed)}
                   notes={map[item.id]?.notes ?? ''}
+                  favorite={Boolean(map[item.id]?.favorite)}
+                  revisit={Boolean(map[item.id]?.revisit)}
+                  important={Boolean(map[item.id]?.important)}
+                  confusing={Boolean(map[item.id]?.confusing)}
                   variant={variant}
                   onToggle={() => onToggle(item)}
                   onNotes={() => onNotes(item)}
+                  onFavorite={() => onFavorite(item)}
+                  onTag={(name, value) => onTag(item, name, value)}
                 />
               ))
             ) : (
