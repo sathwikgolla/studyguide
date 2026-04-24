@@ -3,7 +3,6 @@ import { Link, NavLink } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { BookOpen } from 'lucide-react'
 import { dashboardNav } from '../../config/dashboardNav'
-import { useSubscription } from '../../hooks/useSubscription'
 
 const MotionAside = motion.aside
 const MotionDiv = motion.div
@@ -48,7 +47,6 @@ const navMap = new Map(dashboardNav.map((item) => [item.id, item]))
 
 export default function AppSidebar() {
   const [hovered, setHovered] = useState(false)
-  const { isPremium } = useSubscription()
 
   return (
     <MotionAside
@@ -97,7 +95,6 @@ export default function AppSidebar() {
               </MotionP>
               <div className="space-y-0.5">
                 {section.items.map((itemId) => {
-                  if (!isPremium && itemId === 'smart-features') return null
                   const item = navMap.get(itemId)
                   if (!item) return null
                   const Icon = item.icon

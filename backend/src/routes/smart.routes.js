@@ -1,7 +1,6 @@
 const express = require("express");
 const requireAuth = require("../middleware/requireAuth");
 const requireMongo = require("../middleware/requireMongo");
-const checkPremiumAccess = require("../middleware/checkPremiumAccess");
 const {
   adaptiveSuggestions,
   upsertGoal,
@@ -16,7 +15,7 @@ const {
 
 const router = express.Router();
 
-router.use(requireAuth, requireMongo, checkPremiumAccess);
+router.use(requireAuth, requireMongo);
 
 router.get("/adaptive/suggestions", adaptiveSuggestions);
 router.get("/goals", getGoal);

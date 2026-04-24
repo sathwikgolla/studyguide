@@ -59,10 +59,10 @@ export default function AppRoutes() {
           />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="pricing" element={<PricingPage />} />
+          <Route path="smart-features" element={<SmartFeaturesPage />} />
           <Route path="favorites" element={<FavoritesPage />} />
           <Route element={<RequirePremium />}>
             <Route path="mock-interview" element={<MockInterviewPage />} />
-            <Route path="smart-features" element={<SmartFeaturesPage />} />
           </Route>
         </Route>
       </Route>

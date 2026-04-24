@@ -11,12 +11,9 @@ import XPProgressBar from '../components/dashboard/home/XPProgressBar'
 import WeeklyChallengeCard from '../components/dashboard/home/WeeklyChallengeCard'
 import StreakBadge from '../components/dashboard/home/StreakBadge'
 import RevisionQueue from '../components/modules/RevisionQueue'
-import PremiumLockOverlay from '../components/premium/PremiumLockOverlay'
-import { useSubscription } from '../hooks/useSubscription'
 
 export default function SmartFeaturesPage() {
   const { token, userId } = useAuth()
-  const { isPremium } = useSubscription()
   const [state, setState] = useState({
     tasks: [],
     planProgress: { completedCount: 0, totalTasks: 0, allCompleted: false },
@@ -33,7 +30,7 @@ export default function SmartFeaturesPage() {
   })
 
   useEffect(() => {
-    if (!token || !isPremium) return
+    if (!token) return
     void (async () => {
       const requests = await Promise.allSettled([
         getJson('/api/planner/today', { token }),
@@ -44,7 +41,7 @@ export default function SmartFeaturesPage() {
         getJson('/api/xp', { token }),
         getJson('/api/weekly-challenge', { token }),
         getJson('/api/streak/me', { token }),
-        isPremium ? getJson('/api/revision/queue', { token }) : Promise.resolve({ queue: [] }),
+        getJson('/api/revision/queue', { token }),
       ])
       const [plan, weak, adaptive, goal, mistakes, xp, challenge, streak, revision] = requests.map((r) =>
         r.status === 'fulfilled' ? r.value : null
@@ -64,7 +61,7 @@ export default function SmartFeaturesPage() {
         revisionQueue: revision?.queue ?? [],
       })
     })()
-  }, [token, userId, isPremium])
+  }, [token, userId])
 
   return (
     <div className="relative space-y-4">
@@ -147,20 +144,8 @@ export default function SmartFeaturesPage() {
             })()
           }}
         />
-        {!isPremium ? (
-          <PremiumLockOverlay
-            title="Smart Revision is Premium"
-            description="Upgrade to unlock spaced repetition queues and revision scheduling."
-          />
-        ) : null}
       </div>
       <MistakeInsights insights={state.mistakes} />
-      {!isPremium ? (
-        <PremiumLockOverlay
-          title="Smart Features are Premium-only"
-          description="Upgrade to Premium to access adaptive suggestions, goals, smart revision, and gamified insights."
-        />
-      ) : null}
     </div>
   )
 }

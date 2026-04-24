@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Play } from 'lucide-react'
+import { ChevronDown, ChevronRight, Play } from 'lucide-react'
 import { moduleVariants } from '../../config/moduleVariants'
 import { progressForItems, topicsForModule } from '../../lib/moduleItems'
 import ModuleOverviewHeader from './ModuleOverviewHeader'
@@ -46,6 +46,7 @@ export default function ModuleLearningPage({
   const [timerQuestionId, setTimerQuestionId] = useState(null)
   const [revisionQueue, setRevisionQueue] = useState([])
   const [notesModal, setNotesModal] = useState(null)
+  const [questionsExpanded, setQuestionsExpanded] = useState(false)
   const { token } = useAuth()
 
   useEffect(() => {
@@ -59,6 +60,10 @@ export default function ModuleLearningPage({
       /* ignore */
     }
   }, [moduleId, selectedTopic])
+
+  useEffect(() => {
+    setQuestionsExpanded(false)
+  }, [selectedTopic])
 
   const moduleStats = useMemo(() => progressForItems(items, map), [items, map])
 
@@ -238,26 +243,51 @@ export default function ModuleLearningPage({
         difficultyStats={difficultyStats}
         variant={variant}
       />
+      <section className="space-y-3">
+        <button
+          type="button"
+          onClick={() => setQuestionsExpanded((prev) => !prev)}
+          className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-neutral-950/55 px-4 py-3 text-left transition hover:border-indigo-400/35"
+        >
+          <div>
+            <p className="text-sm font-semibold text-white">{selectedTopic} Questions</p>
+            <p className="text-xs text-neutral-500">
+              {questionsExpanded ? 'Collapse to hide questions' : 'Expand to view questions'}
+            </p>
+          </div>
+          {questionsExpanded ? (
+            <ChevronDown className="size-4 text-neutral-400" aria-hidden />
+          ) : (
+            <ChevronRight className="size-4 text-neutral-400" aria-hidden />
+          )}
+        </button>
 
-      <TopicDetailView
-        topic={selectedTopic}
-        items={filteredTopicItems}
-        map={map}
-        variant={variant}
-        onToggle={(item) => toggleDone(`${keyOf(moduleId)}-${keyOf(item.topic)}-${keyOf(item.difficulty)}`, item.id)}
-        onNotes={(item) =>
-          setNotesModal({
-            id: item.id,
-            title: item.title,
-            progressKey: `${keyOf(moduleId)}-${keyOf(item.topic)}`,
-            notes: map[item.id]?.notes ?? '',
-          })
-        }
-        onFavorite={(item) => toggleFavorite(`${keyOf(moduleId)}-${keyOf(item.topic)}`, item.id)}
-        onTag={(item, name, value) =>
-          saveQuestionFlags(`${keyOf(moduleId)}-${keyOf(item.topic)}`, item.id, { [name]: value })
-        }
-      />
+        {questionsExpanded ? (
+          <TopicDetailView
+            topic={selectedTopic}
+            items={filteredTopicItems}
+            map={map}
+            variant={variant}
+            onToggle={(item) => toggleDone(`${keyOf(moduleId)}-${keyOf(item.topic)}-${keyOf(item.difficulty)}`, item.id)}
+            onNotes={(item) =>
+              setNotesModal({
+                id: item.id,
+                title: item.title,
+                progressKey: `${keyOf(moduleId)}-${keyOf(item.topic)}`,
+                notes: map[item.id]?.notes ?? '',
+              })
+            }
+            onFavorite={(item) => toggleFavorite(`${keyOf(moduleId)}-${keyOf(item.topic)}`, item.id)}
+            onTag={(item, name, value) =>
+              saveQuestionFlags(`${keyOf(moduleId)}-${keyOf(item.topic)}`, item.id, { [name]: value })
+            }
+          />
+        ) : (
+          <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-6 text-sm text-neutral-500">
+            Expand this topic/sheet to see questions.
+          </div>
+        )}
+      </section>
 
       <AnimatePresence>
         {notesModal && (

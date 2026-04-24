@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Check, Crown } from 'lucide-react'
 import { useSubscription } from '../hooks/useSubscription'
-import { postJson } from '../lib/api'
-import { useAuth } from '../context/AuthContext'
 
 const FREE_FEATURES = [
   'Access to core prep modules',
@@ -18,21 +16,9 @@ const PREMIUM_FEATURES = [
 ]
 
 export default function PricingPage() {
-  const { token } = useAuth()
-  const { plan, refresh } = useSubscription()
-  const [showCheckout, setShowCheckout] = useState(false)
-  const [paying, setPaying] = useState(false)
+  const { plan, upgrade } = useSubscription()
+  const [upgrading, setUpgrading] = useState(false)
   const [message, setMessage] = useState('')
-
-  const loadRazorpayScript = () =>
-    new Promise((resolve) => {
-      if (window.Razorpay) return resolve(true)
-      const script = document.createElement('script')
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-      script.onload = () => resolve(true)
-      script.onerror = () => resolve(false)
-      document.body.appendChild(script)
-    })
 
   return (
     <div className="relative space-y-4">
@@ -99,73 +85,29 @@ export default function PricingPage() {
             ) : (
               <button
                 type="button"
-                onClick={() => setShowCheckout(true)}
+                onClick={async () => {
+                  setUpgrading(true)
+                  setMessage('')
+                  try {
+                    await upgrade('premium')
+                    setMessage('Premium activated.')
+                  } catch {
+                    setMessage('Could not activate premium right now.')
+                  } finally {
+                    setUpgrading(false)
+                  }
+                }}
                 className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110"
               >
-                Proceed to Payment (₹99)
+                {upgrading ? 'Activating...' : 'Activate Premium'}
               </button>
             )}
           </div>
         </section>
       </div>
-      {showCheckout && plan !== 'premium' ? (
-        <section className="rounded-2xl border border-indigo-400/30 bg-neutral-950/80 p-5">
-          <h3 className="text-base font-semibold text-white">Premium Checkout</h3>
-          <p className="mt-1 text-sm text-neutral-400">
-            Amount payable: ₹99 / month. You will be redirected to secure Razorpay checkout.
-          </p>
-          {message ? <p className="mt-3 text-xs text-emerald-200">{message}</p> : null}
-          <div className="mt-4 flex gap-2">
-            <button
-              type="button"
-              disabled={paying}
-              onClick={async () => {
-                setPaying(true)
-                try {
-                  if (!token) throw new Error('Please log in first')
-                  const scriptLoaded = await loadRazorpayScript()
-                  if (!scriptLoaded) throw new Error('Failed to load payment gateway')
-                  const order = await postJson('/api/subscription/create-order', {}, { token })
-                  if (order?.alreadyPremium) {
-                    setMessage('You are already on Premium plan.')
-                    return
-                  }
-                  const options = {
-                    key: order.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID,
-                    amount: order.amount,
-                    currency: order.currency,
-                    name: 'PrepFlow',
-                    description: order.description || 'Premium subscription',
-                    order_id: order.orderId,
-                    handler: async (response) => {
-                      await postJson('/api/subscription/verify-payment', response, { token })
-                      await refresh()
-                      setMessage('Payment successful. Premium activated.')
-                    },
-                    prefill: {
-                      name: order.customer?.name || '',
-                      email: order.customer?.email || '',
-                    },
-                    theme: { color: '#6366f1' },
-                  }
-                  const rzp = new window.Razorpay(options)
-                  rzp.open()
-                } finally {
-                  setPaying(false)
-                }
-              }}
-              className="rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 disabled:opacity-60"
-            >
-              {paying ? 'Opening payment...' : 'Pay ₹99 securely'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowCheckout(false)}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200"
-            >
-              Cancel
-            </button>
-          </div>
+      {message ? (
+        <section className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+          <p className="text-xs text-neutral-200">{message}</p>
         </section>
       ) : null}
     </div>
