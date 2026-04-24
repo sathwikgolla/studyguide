@@ -1,6 +1,7 @@
 const express = require("express");
 const requireAuth = require("../middleware/requireAuth");
 const requireMongo = require("../middleware/requireMongo");
+const checkPremiumAccess = require("../middleware/checkPremiumAccess");
 const {
   adaptiveSuggestions,
   upsertGoal,
@@ -15,15 +16,17 @@ const {
 
 const router = express.Router();
 
-router.get("/adaptive/suggestions", requireAuth, requireMongo, adaptiveSuggestions);
-router.get("/goals", requireAuth, requireMongo, getGoal);
-router.post("/goals", requireAuth, requireMongo, upsertGoal);
-router.post("/practice/timer", requireAuth, requireMongo, practiceTimer);
-router.get("/revision", requireAuth, requireMongo, revisionQueue);
-router.get("/analytics/mistakes", requireAuth, requireMongo, mistakeInsights);
-router.post("/xp/update", requireAuth, requireMongo, updateXp);
-router.get("/xp", requireAuth, requireMongo, getXp);
-router.get("/weekly-challenge", requireAuth, requireMongo, weeklyChallenge);
-router.post("/weekly-challenge", requireAuth, requireMongo, weeklyChallenge);
+router.use(requireAuth, requireMongo, checkPremiumAccess);
+
+router.get("/adaptive/suggestions", adaptiveSuggestions);
+router.get("/goals", getGoal);
+router.post("/goals", upsertGoal);
+router.post("/practice/timer", practiceTimer);
+router.get("/revision", revisionQueue);
+router.get("/analytics/mistakes", mistakeInsights);
+router.post("/xp/update", updateXp);
+router.get("/xp", getXp);
+router.get("/weekly-challenge", weeklyChallenge);
+router.post("/weekly-challenge", weeklyChallenge);
 
 module.exports = router;

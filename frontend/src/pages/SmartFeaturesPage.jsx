@@ -10,11 +10,18 @@ import MistakeInsights from '../components/dashboard/home/MistakeInsights'
 import XPProgressBar from '../components/dashboard/home/XPProgressBar'
 import WeeklyChallengeCard from '../components/dashboard/home/WeeklyChallengeCard'
 import StreakBadge from '../components/dashboard/home/StreakBadge'
+import RevisionQueue from '../components/modules/RevisionQueue'
+import PremiumLockOverlay from '../components/premium/PremiumLockOverlay'
+import { useSubscription } from '../hooks/useSubscription'
 
 export default function SmartFeaturesPage() {
   const { token, userId } = useAuth()
+  const { isPremium } = useSubscription()
   const [state, setState] = useState({
     tasks: [],
+    planProgress: { completedCount: 0, totalTasks: 0, allCompleted: false },
+    profile: { stars: 0, rank: 'Rookie' },
+    dailyReward: null,
     weakTopics: [],
     adaptive: { preferredDifficulty: 'Medium', suggestions: [] },
     goal: null,
@@ -22,10 +29,11 @@ export default function SmartFeaturesPage() {
     xp: { xp: 0, level: 1, achievements: [] },
     challenge: null,
     streak: { currentStreak: 0, longestStreak: 0 },
+    revisionQueue: [],
   })
 
   useEffect(() => {
-    if (!token) return
+    if (!token || !isPremium) return
     void (async () => {
       const requests = await Promise.allSettled([
         getJson('/api/planner/today', { token }),
@@ -36,12 +44,16 @@ export default function SmartFeaturesPage() {
         getJson('/api/xp', { token }),
         getJson('/api/weekly-challenge', { token }),
         getJson('/api/streak/me', { token }),
+        isPremium ? getJson('/api/revision/queue', { token }) : Promise.resolve({ queue: [] }),
       ])
-      const [plan, weak, adaptive, goal, mistakes, xp, challenge, streak] = requests.map((r) =>
+      const [plan, weak, adaptive, goal, mistakes, xp, challenge, streak, revision] = requests.map((r) =>
         r.status === 'fulfilled' ? r.value : null
       )
       setState({
         tasks: plan?.tasks ?? [],
+        planProgress: plan?.progress ?? { completedCount: 0, totalTasks: plan?.tasks?.length ?? 0, allCompleted: false },
+        profile: plan?.profile ?? { stars: 0, rank: 'Rookie' },
+        dailyReward: plan?.reward ?? null,
         weakTopics: weak?.weakTopics ?? [],
         adaptive: adaptive ?? { preferredDifficulty: 'Medium', suggestions: [] },
         goal: goal?.goal ?? null,
@@ -49,12 +61,13 @@ export default function SmartFeaturesPage() {
         xp: { xp: xp?.xp ?? 0, level: xp?.level ?? 1, achievements: xp?.achievements ?? [] },
         challenge: challenge?.challenge ?? null,
         streak: streak?.streak ?? { currentStreak: 0, longestStreak: 0 },
+        revisionQueue: revision?.queue ?? [],
       })
     })()
-  }, [token, userId])
+  }, [token, userId, isPremium])
 
   return (
-    <div className="space-y-4">
+    <div className="relative space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div>
           <h2 className="text-xl font-semibold text-white">Smart Features</h2>
@@ -62,6 +75,8 @@ export default function SmartFeaturesPage() {
         </div>
         <div className="flex gap-2">
           <Link to="/analytics" className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200">Analytics</Link>
+          <Link to="/mock-interview" className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200">Mock Interview</Link>
+          <Link to="/pricing" className="rounded-lg border border-indigo-400/35 bg-indigo-500/10 px-3 py-1.5 text-xs text-indigo-100">Pricing</Link>
           <Link to="/favorites" className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200">Favorites</Link>
         </div>
       </div>
@@ -86,7 +101,12 @@ export default function SmartFeaturesPage() {
       )}
 
       <div className="grid gap-3 lg:grid-cols-2">
-        <DailyPlanCard tasks={state.tasks} />
+        <DailyPlanCard
+          tasks={state.tasks}
+          progress={state.planProgress}
+          profile={state.profile}
+          reward={state.dailyReward}
+        />
         <WeakTopicsCard weakTopics={state.weakTopics} />
       </div>
       <div className="grid gap-3 lg:grid-cols-2">
@@ -109,7 +129,38 @@ export default function SmartFeaturesPage() {
           }}
         />
       </div>
+      <div className="relative">
+        <RevisionQueue
+          items={state.revisionQueue}
+          onMarkDone={(item) => {
+            if (!token) return
+            void (async () => {
+              try {
+                await postJson('/api/revision/update', { questionId: item.questionId, stage: 2, completed: true }, { token })
+                setState((prev) => ({
+                  ...prev,
+                  revisionQueue: prev.revisionQueue.filter((q) => q.questionId !== item.questionId),
+                }))
+              } catch {
+                /* no-op */
+              }
+            })()
+          }}
+        />
+        {!isPremium ? (
+          <PremiumLockOverlay
+            title="Smart Revision is Premium"
+            description="Upgrade to unlock spaced repetition queues and revision scheduling."
+          />
+        ) : null}
+      </div>
       <MistakeInsights insights={state.mistakes} />
+      {!isPremium ? (
+        <PremiumLockOverlay
+          title="Smart Features are Premium-only"
+          description="Upgrade to Premium to access adaptive suggestions, goals, smart revision, and gamified insights."
+        />
+      ) : null}
     </div>
   )
 }

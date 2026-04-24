@@ -1,11 +1,13 @@
 import { useState, useCallback } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { LogIn, Mail, Lock } from 'lucide-react'
-import AuthScreen from '../components/auth/AuthScreen'
+import { LoaderCircle, LogIn, Mail } from 'lucide-react'
+import AuthLayout from '../components/auth/AuthLayout'
 import FormField from '../components/auth/FormField'
+import PasswordInput from '../components/auth/PasswordInput'
+import GoogleAuthButton from '../components/auth/GoogleAuthButton'
 import { useAuth } from '../context/AuthContext'
-import { validateEmailField, validatePasswordField } from '../lib/authValidation'
+import { validateEmailField, validateLoginPasswordField } from '../lib/authValidation'
 
 const MotionDiv = motion.div
 const MotionButton = motion.button
@@ -23,7 +25,7 @@ const fieldMotion = {
 export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login } = useAuth()
+  const { login, loginWithGoogle } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -31,6 +33,11 @@ export default function LoginPage() {
   const [touched, setTouched] = useState({})
   const [apiError, setApiError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [rememberMe, setRememberMe] = useState(true)
+  const [toast, setToast] = useState(null)
+  const signedUpMessage = location.state?.justSignedUp
+    ? 'Account created successfully. Please sign in.'
+    : null
 
   const runEmailValidation = useCallback(() => {
     const err = validateEmailField(email)
@@ -39,7 +46,7 @@ export default function LoginPage() {
   }, [email])
 
   const runPasswordValidation = useCallback(() => {
-    const err = validatePasswordField(password)
+    const err = validateLoginPasswordField(password)
     setErrors((e) => ({ ...e, password: err || undefined }))
     return !err
   }, [password])
@@ -64,7 +71,7 @@ export default function LoginPage() {
 
     setSubmitting(true)
     try {
-      await login(email, password)
+      await login(email, password, { rememberMe })
       const raw = location.state?.from
       const dest =
         typeof raw === 'string' &&
@@ -75,14 +82,27 @@ export default function LoginPage() {
           : '/'
       navigate(dest, { replace: true })
     } catch (err) {
-      setApiError(err instanceof Error ? err.message : 'Sign in failed')
+      const message = err instanceof Error ? err.message : 'Sign in failed'
+      setApiError(message)
+      setToast({ type: 'error', message })
     } finally {
       setSubmitting(false)
     }
   }
 
+  const handleGoogleLogin = async (credential) => {
+    try {
+      await loginWithGoogle(credential, { rememberMe })
+      navigate('/', { replace: true })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Google sign-in failed'
+      setApiError(message)
+      setToast({ type: 'error', message })
+    }
+  }
+
   return (
-    <AuthScreen
+    <AuthLayout
       title="Welcome back"
       subtitle="Sign in to continue your PrepFlow sessions."
       footer={
@@ -97,6 +117,11 @@ export default function LoginPage() {
         </p>
       }
     >
+      {toast ? (
+        <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+          {toast.message}
+        </p>
+      ) : null}
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <MotionDiv custom={0} variants={fieldMotion} initial="hidden" animate="visible">
           <FormField
@@ -116,10 +141,9 @@ export default function LoginPage() {
           />
         </MotionDiv>
         <MotionDiv custom={1} variants={fieldMotion} initial="hidden" animate="visible">
-          <FormField
+          <PasswordInput
             id="password"
             label="Password"
-            type="password"
             autoComplete="current-password"
             value={password}
             onChange={(v) => {
@@ -128,10 +152,22 @@ export default function LoginPage() {
             }}
             onBlur={handleBlurPassword}
             error={touched.password ? errors.password : undefined}
-            icon={Lock}
-            placeholder="••••••••"
           />
         </MotionDiv>
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2 text-sm text-neutral-300">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="size-4 rounded border-neutral-700 bg-neutral-900 text-indigo-500 focus:ring-indigo-500"
+            />
+            Remember me
+          </label>
+          <Link to="/forgot-password" className="text-sm text-indigo-400 transition hover:text-indigo-300">
+            Forgot password?
+          </Link>
+        </div>
 
         {apiError && (
           <MotionP
@@ -143,6 +179,16 @@ export default function LoginPage() {
             {apiError}
           </MotionP>
         )}
+        {signedUpMessage && !apiError && (
+          <MotionP
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200"
+            role="status"
+          >
+            {signedUpMessage}
+          </MotionP>
+        )}
 
         <MotionButton
           type="submit"
@@ -151,10 +197,11 @@ export default function LoginPage() {
           whileHover={submitting ? undefined : { scale: 1.01 }}
           whileTap={submitting ? undefined : { scale: 0.99 }}
         >
-          <LogIn className="size-4" aria-hidden />
+          {submitting ? <LoaderCircle className="size-4 animate-spin" aria-hidden /> : <LogIn className="size-4" aria-hidden />}
           {submitting ? 'Signing in…' : 'Sign in'}
         </MotionButton>
+        <GoogleAuthButton onCredential={handleGoogleLogin} disabled={submitting} rememberMe={rememberMe} />
       </form>
-    </AuthScreen>
+    </AuthLayout>
   )
 }

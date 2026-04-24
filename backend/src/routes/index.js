@@ -9,6 +9,9 @@ const streakRoutes = require("./streak.routes");
 const resumeRoutes = require("./resume.routes");
 const favoritesRoutes = require("./favorites.routes");
 const smartRoutes = require("./smart.routes");
+const subscriptionRoutes = require("./subscription.routes");
+const mockRoutes = require("./mock.routes");
+const revisionRoutes = require("./revision.routes");
 
 const router = express.Router();
 
@@ -21,6 +24,9 @@ router.use("/analytics", analyticsRoutes);
 router.use("/streak", streakRoutes);
 router.use("/resume", resumeRoutes);
 router.use("/favorites", favoritesRoutes);
+router.use("/subscription", subscriptionRoutes);
+router.use("/mock", mockRoutes);
+router.use("/revision", revisionRoutes);
 router.use("/", smartRoutes);
 
 router.get("/", (_req, res) => {

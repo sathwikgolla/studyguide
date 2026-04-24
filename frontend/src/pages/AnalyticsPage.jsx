@@ -1,66 +1,71 @@
 import { useEffect, useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { useAuth } from '../context/AuthContext'
 import { getJson } from '../lib/api'
+import ProgressChart from '../components/analytics/ProgressChart'
+import TopicChart from '../components/analytics/TopicChart'
+import DifficultyChart from '../components/analytics/DifficultyChart'
+import WeakTopicsCard from '../components/analytics/WeakTopicsCard'
+import PremiumLockOverlay from '../components/premium/PremiumLockOverlay'
+import { useSubscription } from '../hooks/useSubscription'
 
 export default function AnalyticsPage() {
-  const { token, userId } = useAuth()
+  const { token } = useAuth()
+  const { isPremium, loading: subscriptionLoading } = useSubscription()
+  const [summary, setSummary] = useState({ totalQuestions: 0, completedQuestions: 0, completionRate: 0 })
   const [timeline, setTimeline] = useState([])
-  const [distribution, setDistribution] = useState({ Easy: 0, Medium: 0, Hard: 0 })
+  const [topics, setTopics] = useState([])
+  const [weakTopics, setWeakTopics] = useState([])
+  const [difficulty, setDifficulty] = useState({ Easy: 0, Medium: 0, Hard: 0 })
 
   useEffect(() => {
-    if (!token || !userId) return
+    if (!token || !isPremium) return
     void (async () => {
       try {
-        const [t, d] = await Promise.all([
-          getJson(`/api/analytics/progress/${userId}`, { token }),
-          getJson(`/api/analytics/distribution/${userId}`, { token }),
+        const [overview, topicData, difficultyData] = await Promise.all([
+          getJson('/api/analytics/overview', { token }),
+          getJson('/api/analytics/topics', { token }),
+          getJson('/api/analytics/difficulty', { token }),
         ])
-        setTimeline(t.timeline ?? [])
-        setDistribution(d.distribution ?? { Easy: 0, Medium: 0, Hard: 0 })
+        setSummary(overview.summary ?? { totalQuestions: 0, completedQuestions: 0, completionRate: 0 })
+        setTimeline(overview.timeline ?? [])
+        setTopics(topicData.topics ?? [])
+        setWeakTopics(topicData.weakTopics ?? [])
+        setDifficulty(difficultyData.difficulty ?? { Easy: 0, Medium: 0, Hard: 0 })
       } catch {
         setTimeline([])
       }
     })()
-  }, [token, userId])
-
-  const pieData = [
-    { name: 'Easy', value: distribution.Easy },
-    { name: 'Medium', value: distribution.Medium },
-    { name: 'Hard', value: distribution.Hard },
-  ]
+  }, [token, isPremium])
 
   return (
-    <div className="space-y-4">
+    <div className="relative space-y-4">
       <h2 className="text-xl font-semibold text-white">Analytics Dashboard</h2>
-      <section className="rounded-2xl border border-white/10 bg-neutral-950/60 p-4">
-        <h3 className="text-sm font-semibold text-neutral-200">Solved Over Time</h3>
-        <div className="mt-3 h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={timeline}>
-              <XAxis dataKey="day" stroke="#a3a3a3" />
-              <YAxis stroke="#a3a3a3" />
-              <Tooltip />
-              <Line dataKey="solved" stroke="#6366f1" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+      <section className="grid gap-3 sm:grid-cols-3">
+        <div className="rounded-xl border border-white/10 bg-neutral-950/60 p-4">
+          <p className="text-xs uppercase tracking-wide text-neutral-500">Total Questions</p>
+          <p className="mt-1 text-xl font-semibold text-white">{summary.totalQuestions}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-neutral-950/60 p-4">
+          <p className="text-xs uppercase tracking-wide text-neutral-500">Completed</p>
+          <p className="mt-1 text-xl font-semibold text-white">{summary.completedQuestions}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-neutral-950/60 p-4">
+          <p className="text-xs uppercase tracking-wide text-neutral-500">Completion Rate</p>
+          <p className="mt-1 text-xl font-semibold text-white">{summary.completionRate}%</p>
         </div>
       </section>
-      <section className="rounded-2xl border border-white/10 bg-neutral-950/60 p-4">
-        <h3 className="text-sm font-semibold text-neutral-200">Difficulty Distribution</h3>
-        <div className="mt-3 h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={90}>
-                <Cell fill="#10b981" />
-                <Cell fill="#f59e0b" />
-                <Cell fill="#f43f5e" />
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
+      <ProgressChart data={timeline} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <TopicChart data={topics} />
+        <DifficultyChart difficulty={difficulty} />
+      </div>
+      <WeakTopicsCard weakTopics={weakTopics} />
+      {!subscriptionLoading && !isPremium ? (
+        <PremiumLockOverlay
+          title="Premium analytics"
+          description="Upgrade to Premium to unlock deep progress insights, charts, and weak-topic intelligence."
+        />
+      ) : null}
     </div>
   )
 }

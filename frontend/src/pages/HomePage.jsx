@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles } from 'lucide-react'
+import { Lock, Sparkles } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useProgress } from '../context/ProgressContext'
 import { dashboardNav } from '../config/dashboardNav'
@@ -22,15 +22,20 @@ import GoalPlanner from '../components/dashboard/home/GoalPlanner'
 import MistakeInsights from '../components/dashboard/home/MistakeInsights'
 import XPProgressBar from '../components/dashboard/home/XPProgressBar'
 import WeeklyChallengeCard from '../components/dashboard/home/WeeklyChallengeCard'
+import { useSubscription } from '../hooks/useSubscription'
 
 const MotionDiv = motion.div
 
 export default function HomePage() {
   const navigate = useNavigate()
   const { isAuthenticated, token, userId } = useAuth()
+  const { isPremium } = useSubscription()
   const { progressSummary } = useProgress()
   const totalProblems = progressSummary.totalQuestions
   const [todayPlan, setTodayPlan] = useState([])
+  const [todayPlanProgress, setTodayPlanProgress] = useState({ completedCount: 0, totalTasks: 0, allCompleted: false })
+  const [todayPlanProfile, setTodayPlanProfile] = useState({ stars: 0, rank: 'Rookie' })
+  const [todayPlanReward, setTodayPlanReward] = useState(null)
   const [weakTopics, setWeakTopics] = useState([])
   const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, lastActivityAt: null })
   const [resume, setResume] = useState({ suggestedCategoryId: 'dsa' })
@@ -59,6 +64,11 @@ export default function HomePage() {
         requests.map((r) => (r.status === 'fulfilled' ? r.value : null))
 
       setTodayPlan(planRes?.tasks ?? [])
+      setTodayPlanProgress(
+        planRes?.progress ?? { completedCount: 0, totalTasks: planRes?.tasks?.length ?? 0, allCompleted: false }
+      )
+      setTodayPlanProfile(planRes?.profile ?? { stars: 0, rank: 'Rookie' })
+      setTodayPlanReward(planRes?.reward ?? null)
       setWeakTopics(weakRes?.weakTopics ?? [])
       setStreak(streakRes?.streak ?? { currentStreak: 0, longestStreak: 0, lastActivityAt: null })
       setResume(resumeRes?.resume ?? { suggestedCategoryId: 'dsa' })
@@ -149,7 +159,12 @@ export default function HomePage() {
           </div>
           <NotificationCard message={notificationMessage} />
           <div className="grid gap-3 lg:grid-cols-2">
-            <DailyPlanCard tasks={todayPlan} />
+            <DailyPlanCard
+              tasks={todayPlan}
+              progress={todayPlanProgress}
+              profile={todayPlanProfile}
+              reward={todayPlanReward}
+            />
             <WeakTopicsCard weakTopics={weakTopics} />
           </div>
           <div className="grid gap-3 lg:grid-cols-2">
@@ -184,6 +199,31 @@ export default function HomePage() {
             <Link to="/favorites" className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-200 hover:border-indigo-400/40">
               Open Favorites
             </Link>
+          </div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            {[
+              { title: 'Advanced Analytics', path: '/analytics' },
+              { title: 'Mock Interview Mode', path: '/mock-interview' },
+              { title: 'Smart Revision Queue', path: '/smart-features' },
+            ].map((feature) => (
+              <div key={feature.title} className="relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] p-3">
+                <p className="text-sm font-medium text-white">{feature.title}</p>
+                <p className="mt-1 text-xs text-neutral-500">Premium feature for focused prep outcomes.</p>
+                <div className="mt-3">
+                  <Link
+                    to={isPremium ? feature.path : '/pricing'}
+                    className="inline-flex rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-200 transition hover:border-indigo-400/40"
+                  >
+                    {isPremium ? 'Open' : 'Upgrade to unlock'}
+                  </Link>
+                </div>
+                {!isPremium ? (
+                  <div className="pointer-events-none absolute right-2 top-2 rounded-md border border-white/10 bg-black/40 p-1">
+                    <Lock className="size-3.5 text-amber-300" />
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         </AnimatedSection>
       )}

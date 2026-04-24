@@ -6,10 +6,10 @@ const { updateStreak, getStreakByUserId } = require("../controllers/streak.contr
 const router = express.Router();
 
 router.post("/update", requireAuth, requireMongo, updateStreak);
-router.get("/:userId", requireAuth, requireMongo, getStreakByUserId);
 router.get("/me", requireAuth, requireMongo, (req, _res, next) => {
   req.params.userId = req.userId;
   next();
 }, getStreakByUserId);
+router.get("/:userId", requireAuth, requireMongo, getStreakByUserId);
 
 module.exports = router;

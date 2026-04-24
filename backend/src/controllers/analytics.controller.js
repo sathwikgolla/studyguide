@@ -83,4 +83,78 @@ async function getDistribution(req, res, next) {
   }
 }
 
-module.exports = { getWeakTopics, getProgressTimeline, getDistribution };
+async function getAnalyticsOverview(req, res, next) {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userId);
+    const rows = await Progress.find({ userId }).lean();
+    const solvedRows = rows.filter((r) => r.completed);
+    const timelineMap = {};
+    for (const r of solvedRows) {
+      const day = new Date(r.updatedAt).toISOString().slice(0, 10);
+      timelineMap[day] = (timelineMap[day] || 0) + 1;
+    }
+    const timeline = Object.entries(timelineMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([day, solved]) => ({ day, solved }));
+    const total = rows.length;
+    const completed = solvedRows.length;
+    return res.json({
+      summary: {
+        totalQuestions: total,
+        completedQuestions: completed,
+        completionRate: total ? Math.round((completed / total) * 100) : 0,
+      },
+      timeline,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function getAnalyticsTopics(req, res, next) {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userId);
+    const rows = await Progress.find({ userId }).lean();
+    const bucket = {};
+    for (const row of rows) {
+      const topic = row.categoryId || row.sheetId || "other";
+      if (!bucket[topic]) bucket[topic] = { topic, total: 0, completed: 0, completionPct: 0 };
+      bucket[topic].total += 1;
+      if (row.completed) bucket[topic].completed += 1;
+    }
+    const topics = Object.values(bucket).map((t) => ({
+      ...t,
+      completionPct: t.total ? Math.round((t.completed / t.total) * 100) : 0,
+    }));
+    const weakTopics = [...topics].sort((a, b) => a.completionPct - b.completionPct).slice(0, 6);
+    return res.json({ topics, weakTopics });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function getAnalyticsDifficulty(req, res, next) {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.userId);
+    const rows = await Progress.find({ userId }).lean();
+    const difficulty = { Easy: 0, Medium: 0, Hard: 0 };
+    for (const row of rows) {
+      const text = String(row.questionId || "").toLowerCase();
+      if (text.includes("easy")) difficulty.Easy += 1;
+      else if (text.includes("hard")) difficulty.Hard += 1;
+      else difficulty.Medium += 1;
+    }
+    return res.json({ difficulty });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+module.exports = {
+  getWeakTopics,
+  getProgressTimeline,
+  getDistribution,
+  getAnalyticsOverview,
+  getAnalyticsTopics,
+  getAnalyticsDifficulty,
+};

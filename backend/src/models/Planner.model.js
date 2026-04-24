@@ -21,6 +21,19 @@ const plannerSchema = new mongoose.Schema(
         kind: { type: String, enum: ["dsa", "core", "revision"], default: "core" },
       },
     ],
+    rewardClaimed: {
+      type: Boolean,
+      default: false,
+    },
+    completedAt: {
+      type: Date,
+      default: null,
+    },
+    starsAwarded: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
   },
   { timestamps: true }
 );

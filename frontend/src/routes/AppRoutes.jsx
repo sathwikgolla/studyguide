@@ -11,8 +11,13 @@ import FavoritesPage from '../pages/FavoritesPage'
 import SmartFeaturesPage from '../pages/SmartFeaturesPage'
 import LoginPage from '../pages/LoginPage'
 import SignupPage from '../pages/SignupPage'
+import ForgotPasswordPage from '../pages/ForgotPasswordPage'
+import ResetPasswordPage from '../pages/ResetPasswordPage'
+import PricingPage from '../pages/PricingPage'
+import MockInterviewPage from '../pages/MockInterviewPage'
 import RequireAuth from './RequireAuth'
 import GuestOnly from './GuestOnly'
+import RequirePremium from './RequirePremium'
 
 export default function AppRoutes() {
   return (
@@ -20,6 +25,8 @@ export default function AppRoutes() {
       <Route element={<GuestOnly />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Route>
 
       <Route path="/" element={<DashboardLayout />}>
@@ -51,8 +58,12 @@ export default function AppRoutes() {
             element={<AdditionalModulePage moduleId="core-cs-fundamentals" />}
           />
           <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="pricing" element={<PricingPage />} />
           <Route path="favorites" element={<FavoritesPage />} />
-          <Route path="smart-features" element={<SmartFeaturesPage />} />
+          <Route element={<RequirePremium />}>
+            <Route path="mock-interview" element={<MockInterviewPage />} />
+            <Route path="smart-features" element={<SmartFeaturesPage />} />
+          </Route>
         </Route>
       </Route>
     </Routes>

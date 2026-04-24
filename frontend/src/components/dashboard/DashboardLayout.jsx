@@ -3,6 +3,7 @@ import { Search, LogOut, Info, LogIn, UserPlus } from 'lucide-react'
 import AppSidebar from './AppSidebar'
 import { useAuth } from '../../context/AuthContext'
 import { dashboardNav } from '../../config/dashboardNav'
+import UpgradeButton from '../premium/UpgradeButton'
 
 function titleForPath(pathname) {
   if (pathname === '/') return 'Overview'
@@ -83,6 +84,7 @@ export default function DashboardLayout() {
                 />
               </div>
               <div className="flex shrink-0 items-center gap-3 text-xs font-medium">
+                <UpgradeButton />
                 {isAuthed ? (
                   <button
                     type="button"
