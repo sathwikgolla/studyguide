@@ -10,13 +10,13 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes); // optional old support
 app.use("/api", routes);
 /** Alias for GET /questions (same handlers as /api/questions). */
 app.use("/questions", questionRoutes);
 
-app.get("/health", (_req, res) => {
+app.get(["/health", "/api/health"], (_req, res) => {
   res.json({
     ok: true,
     service: "PrepFlow API",
