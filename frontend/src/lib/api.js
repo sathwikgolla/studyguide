@@ -1,78 +1,134 @@
-/** Base URL for API (empty = same origin; Vite dev server proxies /auth and /api). */
-export function apiUrl(path) {
-  const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
-  const p = path.startsWith('/') ? path : `/${path}`
-  return `${base}${p}`
+const TOKEN_KEY = 'prepflow:token'
+const LEGACY_TOKEN_KEY = 'token'
+
+function normalizeBaseUrl() {
+  let base = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+  if (base.endsWith('/api')) base = base.slice(0, -4)
+  return base
 }
 
-function authHeaders(token) {
-  const headers = {}
-  if (token) headers.Authorization = `Bearer ${token}`
-  return headers
+/** Base URL for API (empty = same origin; Vite dev server proxies /auth and /api). */
+export function apiUrl(path) {
+  const p = path.startsWith('/') ? path : `/${path}`
+  return `${normalizeBaseUrl()}${p}`
+}
+
+function readStoredToken() {
+  try {
+    return (
+      localStorage.getItem(TOKEN_KEY) ||
+      localStorage.getItem(LEGACY_TOKEN_KEY) ||
+      sessionStorage.getItem(TOKEN_KEY) ||
+      sessionStorage.getItem(LEGACY_TOKEN_KEY)
+    )
+  } catch {
+    return null
+  }
+}
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms)
+  })
+}
+
+function shouldRetry(res, attempt, retries) {
+  if (attempt >= retries) return false
+  if (!res) return true
+  return [408, 429, 500, 502, 503, 504].includes(res.status)
 }
 
 async function parseJsonResponse(res) {
   const raw = await res.text()
-  let data = {}
+  if (!raw) return {}
   try {
-    data = raw ? JSON.parse(raw) : {}
+    return JSON.parse(raw)
   } catch {
-    data = {}
+    return {}
   }
-  return data
 }
 
-function throwIfNotOk(res, data) {
-  if (res.ok) return
-  let message = typeof data.error === 'string' ? data.error : ''
-  if (!message) {
-    if (res.status === 502 || res.status === 504) {
-      message =
-        'Bad gateway — the API server is not responding on port 5000. Run `npm run dev` in the backend folder and ensure MongoDB is running.'
-    } else {
-      message = `Request failed (${res.status})`
+function errorMessage(res, data) {
+  if (typeof data.error === 'string' && data.error) return data.error
+  if (typeof data.message === 'string' && data.message) return data.message
+  if (res.status === 502 || res.status === 504) {
+    return 'Bad gateway - the API server is not responding. Check the backend service and MongoDB connection.'
+  }
+  return `Request failed (${res.status})`
+}
+
+export async function requestJson(path, options = {}) {
+  const {
+    method = 'GET',
+    body,
+    token,
+    auth = true,
+    headers = {},
+    retries = method === 'GET' ? 1 : 0,
+    retryDelayMs = 350,
+  } = options
+
+  let lastNetworkError = null
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    let res = null
+    try {
+      const authToken = auth ? token || readStoredToken() : null
+      res = await fetch(apiUrl(path), {
+        method,
+        headers: {
+          ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+          ...headers,
+        },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      })
+    } catch (err) {
+      lastNetworkError = err
+      if (shouldRetry(null, attempt, retries)) {
+        await wait(retryDelayMs * (attempt + 1))
+        continue
+      }
+      throw new Error(
+        "Network error - cannot reach the API. Check VITE_API_URL, Render availability, and Vite's dev proxy."
+      )
     }
+
+    const data = await parseJsonResponse(res)
+    if (res.ok) return data
+    if (shouldRetry(res, attempt, retries)) {
+      await wait(retryDelayMs * (attempt + 1))
+      continue
+    }
+    const err = new Error(errorMessage(res, data))
+    err.status = res.status
+    err.data = data
+    throw err
   }
-  throw new Error(message)
+
+  throw lastNetworkError || new Error('Request failed')
 }
 
-export async function getJson(path, options = {}) {
-  const { token } = options
-  let res
-  try {
-    res = await fetch(apiUrl(path), {
-      method: 'GET',
-      headers: { ...authHeaders(token) },
-    })
-  } catch {
-    throw new Error(
-      'Network error — cannot reach the API. Start the backend (port 5000) and, in dev, keep Vite’s proxy pointing at it.'
-    )
-  }
-  const data = await parseJsonResponse(res)
-  throwIfNotOk(res, data)
-  return data
+export function getJson(path, options = {}) {
+  return requestJson(path, { ...options, method: 'GET' })
 }
 
-export async function postJson(path, body, options = {}) {
-  const { token } = options
-  let res
-  try {
-    res = await fetch(apiUrl(path), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeaders(token),
-      },
-      body: JSON.stringify(body),
-    })
-  } catch {
-    throw new Error(
-      'Network error — cannot reach the API. Start the backend (port 5000) and, in dev, keep Vite’s proxy pointing at it.'
-    )
-  }
+export function postJson(path, body, options = {}) {
+  return requestJson(path, { ...options, method: 'POST', body })
+}
 
-  const data = await parseJsonResponse(res)
-  throwIfNotOk(res, data)
-  return data
+export function putJson(path, body, options = {}) {
+  return requestJson(path, { ...options, method: 'PUT', body })
+}
+
+export function deleteJson(path, options = {}) {
+  return requestJson(path, { ...options, method: 'DELETE' })
+}
+
+export const api = {
+  get: getJson,
+  post: postJson,
+  put: putJson,
+  delete: deleteJson,
+  request: requestJson,
+  url: apiUrl,
 }

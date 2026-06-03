@@ -81,6 +81,44 @@ async function upsertGoal(req, res, next) {
   }
 }
 
+async function updateGoal(req, res, next) {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: "Invalid goal id" });
+
+    const allowed = {};
+    for (const key of ["title", "targetCategory", "targetDays", "profile", "active"]) {
+      if (Object.prototype.hasOwnProperty.call(req.body || {}, key)) allowed[key] = req.body[key];
+    }
+    if (allowed.title !== undefined && !String(allowed.title).trim()) {
+      return res.status(400).json({ error: "title cannot be empty" });
+    }
+    if (allowed.title !== undefined) allowed.title = String(allowed.title).trim();
+
+    const goal = await Goal.findOneAndUpdate(
+      { _id: id, userId: uid(req) },
+      { $set: allowed },
+      { new: true, runValidators: true }
+    );
+    if (!goal) return res.status(404).json({ error: "Goal not found" });
+    return res.json({ goal });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function deleteGoal(req, res, next) {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: "Invalid goal id" });
+    const goal = await Goal.findOneAndDelete({ _id: id, userId: uid(req) });
+    if (!goal) return res.status(404).json({ error: "Goal not found" });
+    return res.json({ ok: true, deletedId: String(goal._id) });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 async function getGoal(req, res, next) {
   try {
     const goal = await Goal.findOne({ userId: uid(req), active: true }).lean();
@@ -216,6 +254,7 @@ async function getXp(req, res, next) {
     return res.json({
       xp: doc.xp || 0,
       level: doc.level || 1,
+      nextLevel: Math.max(1, doc.level || 1) * 100,
       achievements: doc.achievements || [],
     });
   } catch (err) {
@@ -246,6 +285,8 @@ async function weeklyChallenge(req, res, next) {
 module.exports = {
   adaptiveSuggestions,
   upsertGoal,
+  updateGoal,
+  deleteGoal,
   getGoal,
   practiceTimer,
   revisionQueue,

@@ -4,6 +4,8 @@ const requireMongo = require("../middleware/requireMongo");
 const {
   adaptiveSuggestions,
   upsertGoal,
+  updateGoal,
+  deleteGoal,
   getGoal,
   practiceTimer,
   revisionQueue,
@@ -20,6 +22,8 @@ router.use(requireAuth, requireMongo);
 router.get("/adaptive/suggestions", adaptiveSuggestions);
 router.get("/goals", getGoal);
 router.post("/goals", upsertGoal);
+router.put("/goals/:id", updateGoal);
+router.delete("/goals/:id", deleteGoal);
 router.post("/practice/timer", practiceTimer);
 router.get("/revision", revisionQueue);
 router.get("/analytics/mistakes", mistakeInsights);

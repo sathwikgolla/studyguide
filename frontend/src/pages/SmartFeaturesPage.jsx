@@ -38,7 +38,7 @@ export default function SmartFeaturesPage() {
         getJson('/api/adaptive/suggestions', { token }),
         getJson('/api/goals', { token }),
         getJson('/api/analytics/mistakes', { token }),
-        getJson('/api/xp', { token }),
+        getJson('/api/progress/xp', { token }),
         getJson('/api/weekly-challenge', { token }),
         getJson('/api/streak/me', { token }),
         getJson('/api/revision/queue', { token }),

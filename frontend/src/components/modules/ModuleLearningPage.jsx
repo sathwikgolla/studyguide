@@ -107,7 +107,7 @@ export default function ModuleLearningPage({
     if (!token) return
     void (async () => {
       try {
-        const data = await getJson('/api/revision', { token })
+        const data = await getJson('/api/revision/queue', { token })
         setRevisionQueue(data.queue ?? [])
       } catch {
         setRevisionQueue([])
@@ -207,7 +207,7 @@ export default function ModuleLearningPage({
               if (!qid || !token) return
               const item = items.find((i) => i.id === qid)
               postJson(
-                '/api/practice/timer',
+                '/api/progress/practice/timer',
                 {
                   questionId: qid,
                   timeSeconds: seconds,

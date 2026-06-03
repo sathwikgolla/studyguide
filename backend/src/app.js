@@ -8,13 +8,25 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  ...(process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(",") : []),
+]
+  .filter(Boolean)
+  .map((origin) => origin.trim().replace(/\/$/, ""));
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.length === 0) return callback(null, true);
+      const normalized = origin.replace(/\/$/, "");
+      if (allowedOrigins.includes(normalized)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
+  })
+);
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/auth", authRoutes); // optional old support
-app.use("/api", routes);
-/** Alias for GET /questions (same handlers as /api/questions). */
-app.use("/questions", questionRoutes);
 
 app.get(["/health", "/api/health"], (_req, res) => {
   res.json({
@@ -28,6 +40,12 @@ app.get(["/health", "/api/health"], (_req, res) => {
           : "disconnected",
   });
 });
+
+app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes); // optional old support
+app.use("/api", routes);
+/** Alias for GET /questions (same handlers as /api/questions). */
+app.use("/questions", questionRoutes);
 
 app.use(errorHandler);
 

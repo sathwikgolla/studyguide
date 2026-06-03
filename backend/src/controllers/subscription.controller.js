@@ -7,6 +7,7 @@ async function getSubscriptionStatus(req, res, next) {
     return res.json({
       plan: user.plan || "free",
       isPremium: user.plan === "premium",
+      expiresAt: null,
     });
   } catch (err) {
     return next(err);
@@ -32,6 +33,7 @@ async function upgradeSubscription(req, res, next) {
           : "Plan switched to free.",
       plan: user.plan,
       isPremium: user.plan === "premium",
+      expiresAt: null,
     });
   } catch (err) {
     return next(err);
